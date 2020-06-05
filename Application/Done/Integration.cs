@@ -17,13 +17,13 @@ using Models;
 
 namespace Application.Done
 {
-    class Integration : IWebSiteIntegration
+    public class Integration : IWebSiteIntegration
     {
         public WebPage WebPage { get; }
         public IDumpsRepository DumpsRepository { get; }
 
         public IEqualityComparer<Entry> EntriesComparer { get; }
-
+        public Integration() { }
         public Integration(IDumpsRepository dumpsRepository,
             IEqualityComparer<Entry> equalityComparer)
         {
@@ -31,7 +31,7 @@ namespace Application.Done
             EntriesComparer = equalityComparer;
             WebPage = new WebPage
             {
-                Url = "http://nportal.pl/mieszkania/?page=279",
+                Url = "http://nportal.pl/mieszkania/?page=270",
                 Name = "Mitula WebSite Integration",
                 WebPageFeatures = new WebPageFeatures
                 {
@@ -78,6 +78,25 @@ namespace Application.Done
                 try { nextPage = htmlDoc.DocumentNode.SelectNodes("//*/footer/*/div[@class='paginator clearfix']/a[@class='navigate next']").First().Attributes["href"].Value; }
                 catch { nextPage = null; }
             } while (nextPage != null) ;
+
+            return entries;
+        }
+
+        public List<Entry> GetEntriesPage(WebPage webpage)
+        {
+            List<Entry> entries = new List<Entry>();
+            // ładowanie pierwszej strony
+            var htmlDoc = LoadWebPage(webpage.Url);
+            var adslist = htmlDoc.DocumentNode.SelectNodes("//div[@id='listContainer']/*/div[@class='slist']/*/div[@class='slr_left']/h2/a");
+
+
+            //przechodzenie po stronach
+            var nextPage = htmlDoc.DocumentNode.SelectNodes("//*/footer/*/div[@class='paginator clearfix']/a[@class='navigate next']").First().Attributes["href"].Value;
+            
+                // przetwarzanie strony, dodawanie ogłoszeń ze strony
+                foreach (var node in adslist)
+                    entries.Add(GetEntry(node.Attributes["href"].Value));
+            
 
             return entries;
         }

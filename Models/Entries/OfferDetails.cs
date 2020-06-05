@@ -3,7 +3,8 @@
 namespace Models
 {
     public class OfferDetails
-    { 
+    {
+        public int OfferDetailsID { get; set; }
         /// <summary>
         /// Adres do konkretnej oferty
         /// </summary>

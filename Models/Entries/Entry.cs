@@ -2,6 +2,7 @@
 {
     public class Entry
     {
+        public int EntryID { get; set; }
         public OfferDetails OfferDetails { get; set; }
 
         public PropertyPrice PropertyPrice { get; set; }
@@ -16,5 +17,6 @@
         /// Nieprzetworzony tekst z ogłoszenia
         /// </summary>
         public string RawDescription { get; set; }
+
     }
 }
